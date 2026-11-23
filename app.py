@@ -3,6 +3,12 @@ import mysql.connector
 from datetime import datetime, timedelta
 import json
 import os
+import math
+import secrets
+import hmac
+import re
+from urllib.parse import urlsplit
+from flask import abort, render_template_string
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -24,6 +30,7 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config.update(MAX_CONTENT_LENGTH=2 * 1024 * 1024, SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax', SESSION_COOKIE_SECURE=bool(os.environ.get('VERCEL') or os.environ.get('RENDER')))
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 # System Settings (Feature in program instead of DB)
@@ -55,6 +62,64 @@ def get_db_connection():
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def valid_quantity(value, allow_zero=False):
+    if isinstance(value, bool) or not str(value).isdigit():
+        raise ValueError("Invalid quantity")
+    result = int(value)
+    if result < (0 if allow_zero else 1) or result > 1_000_000:
+        raise ValueError("Invalid quantity")
+    return result
+
+
+def valid_price(value):
+    result = float(value)
+    if not math.isfinite(result) or result < 0 or result > 1_000_000_000:
+        raise ValueError("Invalid price")
+    return result
+
+
+@app.before_request
+def protect_writes():
+    session.setdefault("csrf_token", secrets.token_urlsafe(32))
+    if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+        if not hmac.compare_digest(request.form.get("csrf_token", ""), session["csrf_token"]):
+            abort(403)
+        if request.headers.get("Sec-Fetch-Site") == "cross-site":
+            abort(403)
+        origin = request.headers.get("Origin")
+        if origin and urlsplit(origin).netloc != request.host:
+            abort(403)
+    if request.endpoint in {"delete_medicine", "delete_supplier", "clear_sales"}:
+        if "username" not in session:
+            return redirect(url_for("login"))
+        token = session["csrf_token"]
+        if request.method == "GET":
+            return render_template_string(
+                '<h1>Confirm deletion</h1><p>This cannot be undone.</p>'
+                '<form method="post">'
+                '<button type="submit">Confirm deletion</button></form>', token=token)
+        if not hmac.compare_digest(request.form.get("csrf_token", ""), token):
+            abort(403)
+
+
+@app.after_request
+def security_headers(response):
+    # Add the session token to server-rendered forms, including modal forms.
+    # No JavaScript or template changes are required for existing screens.
+    if response.mimetype == "text/html":
+        token = session.get("csrf_token", "")
+        html = response.get_data(as_text=True)
+        html = re.sub(r"(<form\b[^>]*>)", lambda m: m.group(1) +
+                      '<input type="hidden" name="csrf_token" value="' + token + '">',
+                      html, flags=re.IGNORECASE)
+        response.set_data(html)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "same-origin"
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
 
 # Global context processor to provide alert counts and user details to all templates
 @app.context_processor
@@ -100,6 +165,10 @@ def index():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    # This is one shared pharmacy, not a separate workspace per signup.
+    # Hosted registration must be deliberately enabled by the operator.
+    if (os.environ.get("VERCEL") or os.environ.get("RENDER")) and os.environ.get("ALLOW_PUBLIC_REGISTRATION") != "1":
+        return "Public registration is disabled for this shared pharmacy demo.", 403
     if request.method == "POST":
         username = request.form["username"]
         email = request.form["email"]
@@ -146,6 +215,7 @@ def login():
                     db.commit()
             
             if is_valid:
+                session.clear()
                 session["username"] = username
                 cursor.close()
                 db.close()
@@ -159,36 +229,9 @@ def login():
 
 @app.route("/forgot_password", methods=["GET", "POST"])
 def forgot_password():
-    if request.method == "POST":
-        username = request.form["username"]
-        email = request.form["email"]
-        new_password = request.form["new_password"]
-        confirm_password = request.form["confirm_password"]
-        
-        if new_password != confirm_password:
-            flash("Passwords do not match!", "error")
-            return redirect(url_for("forgot_password"))
-            
-        db = get_db_connection()
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE USERNAME=%s AND EMAIL=%s", (username, email))
-        user = cursor.fetchone()
-        
-        if user:
-            hashed_pw = generate_password_hash(new_password)
-            cursor.execute("UPDATE users SET PASSWORD=%s WHERE USERNAME=%s", (hashed_pw, username))
-            db.commit()
-            cursor.close()
-            db.close()
-            flash("Password reset successful! Please login.", "success")
-            return redirect(url_for("login"))
-        else:
-            cursor.close()
-            db.close()
-            flash("Invalid username or email combination.", "error")
-            return redirect(url_for("forgot_password"))
-            
-    return render_template("forgot_password.html")
+    # Knowing a username/email is not proof of account ownership.
+    # Re-enable only after an expiring, single-use verified-email flow exists.
+    return "Password reset is unavailable. Contact the project owner for account recovery.", 403
 
 @app.route("/dashboard")
 def dashboard():
@@ -252,12 +295,20 @@ def add_medicine():
     cat = request.form["category"]
     price = request.form["price"]
     purchase_price_str = request.form.get("purchase_price", "0")
-    purchase_price = float(purchase_price_str) if purchase_price_str else 0.0
+    purchase_price = purchase_price_str or "0"
     exp = request.form["expiry"]
     stock = request.form["stock"]
     pur_date = request.form["purchase_date"]
     supplier_name = request.form.get("supplier_name")
     
+    try:
+        price = valid_price(price)
+        purchase_price = valid_price(purchase_price)
+        stock = valid_quantity(stock, allow_zero=True)
+    except (ValueError, TypeError):
+        flash("Prices and stock must be valid non-negative numbers.", "error")
+        return redirect(url_for("medicine"))
+
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
     
@@ -318,12 +369,20 @@ def update_medicine(id):
     cat = request.form["category"]
     price = request.form["price"]
     purchase_price_str = request.form.get("purchase_price", "0")
-    purchase_price = float(purchase_price_str) if purchase_price_str else 0.0
+    purchase_price = purchase_price_str or "0"
     exp = request.form["expiry"]
-    stock = int(request.form["stock"])
+    stock = request.form["stock"]
     pur_date = request.form["purchase_date"]
     supplier_name = request.form.get("supplier_name")
     
+    try:
+        price = valid_price(price)
+        purchase_price = valid_price(purchase_price)
+        stock = valid_quantity(stock, allow_zero=True)
+    except (ValueError, TypeError):
+        flash("Prices and stock must be valid non-negative numbers.", "error")
+        return redirect(url_for("medicine"))
+
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
     try:
@@ -357,7 +416,7 @@ def update_medicine(id):
         db.close()
     return redirect(url_for("medicine"))
 
-@app.route("/delete_medicine/<id>")
+@app.route("/delete_medicine/<id>", methods=["GET", "POST"])
 def delete_medicine(id):
     if "username" not in session: return redirect(url_for("login"))
     db = get_db_connection()
@@ -403,8 +462,8 @@ def add_purchase():
     med_id = request.form.get("med_id")
     supplier_name = request.form.get("supplier_name")
     try:
-        quantity = int(request.form.get("quantity", 0))
-        unit_price = float(request.form.get("unit_price", 0))
+        quantity = valid_quantity(request.form.get("quantity", 0))
+        unit_price = valid_price(request.form.get("unit_price", 0))
     except ValueError:
         flash("Invalid quantity or unit price.", "error")
         return redirect(url_for("purchase"))
@@ -448,16 +507,27 @@ def process_sale():
     if not cart_data or not customer_name:
         flash("Cart is empty or customer name missing!", "error")
         return redirect(url_for("billing"))
-    cart = json.loads(cart_data)
+    try:
+        cart = json.loads(cart_data)
+        if not isinstance(cart, list) or not cart or len(cart) > 100:
+            raise ValueError("Invalid cart")
+        for item in cart:
+            if not isinstance(item, dict):
+                raise ValueError("Invalid item")
+            item['id'] = valid_quantity(item.get('id'))
+            item['qty'] = valid_quantity(item.get('qty'))
+    except (ValueError, TypeError):
+        flash("Invalid cart. Use positive whole quantities.", "error")
+        return redirect(url_for("billing"))
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
-    invoice_no = datetime.now().strftime("INV-%Y%m%d%H%M%S")
+    invoice_no = datetime.now().strftime("INV-%Y%m%d%H%M%S-") + secrets.token_hex(4)
     total_bill = 0
     try:
         for item in cart:
             med_id = item['id']
             quantity = int(item['qty'])
-            cursor.execute("SELECT MEDICINE_NAME, PRICE, PURCHASE_PRICE, STOCK_QUANTITY FROM medicine WHERE id = %s", (med_id,))
+            cursor.execute("SELECT MEDICINE_NAME, PRICE, PURCHASE_PRICE, STOCK_QUANTITY FROM medicine WHERE id = %s FOR UPDATE", (med_id,))
             medicine = cursor.fetchone()
             if medicine and medicine['STOCK_QUANTITY'] >= quantity:
                 item_total = float(medicine['PRICE']) * quantity
@@ -483,7 +553,7 @@ def process_sale():
     db.close()
     return redirect(url_for("billing"))
 
-@app.route("/clear_sales")
+@app.route("/clear_sales", methods=["GET", "POST"])
 def clear_sales():
     if "username" not in session: return redirect(url_for("login"))
     db = get_db_connection()
@@ -576,7 +646,7 @@ def update_supplier(id):
         db.close()
     return redirect(url_for("supplier"))
 
-@app.route("/delete_supplier/<id>")
+@app.route("/delete_supplier/<id>", methods=["GET", "POST"])
 def delete_supplier(id):
     if "username" not in session: return redirect(url_for("login"))
     db = get_db_connection()
@@ -652,7 +722,14 @@ def settings():
         if 'profile_pic' in request.files:
             file = request.files['profile_pic']
             if file and allowed_file(file.filename):
-                filename = secure_filename(f"{session['username']}_{file.filename}")
+                signature = file.stream.read(16)
+                file.stream.seek(0)
+                if not (signature.startswith(b"\x89PNG\r\n\x1a\n") or signature.startswith(b"\xff\xd8\xff") or signature.startswith((b"GIF87a", b"GIF89a"))):
+                    cursor.close()
+                    db.close()
+                    flash("Choose a real PNG, JPEG or GIF image.", "error")
+                    return redirect(url_for("settings"))
+                filename = secrets.token_hex(16) + "." + secure_filename(file.filename).rsplit(".", 1)[-1].lower()
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 cursor.execute("UPDATE users SET PROFILE_PIC=%s WHERE USERNAME=%s", (filename, session["username"]))
                 db.commit()
