@@ -230,6 +230,12 @@
             input.focus();
         }
 
+        function escapeCartText(value) {
+            const span = document.createElement('span');
+            span.textContent = String(value);
+            return span.innerHTML;
+        }
+
         function updateCartUI() {
             const tbody = document.querySelector('#cart-table tbody');
             tbody.innerHTML = '';
@@ -240,7 +246,7 @@
                 total += rowTotal;
                 tbody.innerHTML += `
                     <tr>
-                        <td><strong>${item.name}</strong></td>
+                        <td><strong>${escapeCartText(item.name)}</strong></td>
                         <td>₹${item.price}</td>
                         <td>${item.qty}</td>
                         <td>₹${rowTotal.toFixed(2)}</td>
