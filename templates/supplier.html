@@ -40,29 +40,14 @@
             transform: scale(1.02);
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="dashboard-body">
     <div class="dashboard-wrapper">
         <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-brand">
-                <i class="fa-solid fa-house-medical"></i>
-                <div class="brand-logotype">
-                    <span class="med">Med</span><span class="care">Care</span><span class="pro-badge">Pro</span>
-                </div>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fa-solid fa-chart-line"></i> Overview</a>
-                <a href="{{ url_for('medicine') }}" class="nav-item"><i class="fa-solid fa-pills"></i> Inventory</a>
-                <a href="{{ url_for('purchase') }}" class="nav-item"><i class="fa-solid fa-cart-plus"></i> Purchases {% if low_stock_count > 0 %}<span class="sidebar-badge" style="background: #e03131;">{{ low_stock_count }}</span>{% endif %}</a>
-                <a href="{{ url_for('expiry') }}" class="nav-item"><i class="fa-solid fa-calendar-xmark"></i> Expiry Alerts {% if alert_count > 0 %}<span class="sidebar-badge">{{ alert_count }}</span>{% endif %}</a>
-                <a href="{{ url_for('billing') }}" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i> Sales & Billing</a>
-                <a href="{{ url_for('supplier') }}" class="nav-item active"><i class="fa-solid fa-users"></i> Suppliers</a>
-                <a href="{{ url_for('reports') }}" class="nav-item"><i class="fa-solid fa-chart-line"></i> Reports</a>
-                <a href="{{ url_for('settings') }}" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
-                <a href="{{ url_for('contact') }}" class="nav-item"><i class="fa-solid fa-envelope"></i> Contact Us</a>
-            </nav>
-        </aside>
+        {% set active_page = 'supplier' %}
+        {% include '_sidebar.html' %}
 
         <!-- MAIN CONTENT -->
         <main class="main-content" id="main-content">
@@ -71,7 +56,6 @@
                     <button class="sidebar-toggle" id="toggle-sidebar">
                         <i class="fa-solid fa-bars-staggered"></i>
                     </button>
-                    <a href="{{ url_for('dashboard') }}" class="btn-back-aesthetic"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
                 </div>
                 <div class="header-title">
                     <h1>Suppliers Directory</h1>

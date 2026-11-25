@@ -8,120 +8,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        .intro-banner {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .intro-banner::after {
-            content: "\f0f1";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            right: -20px;
-            bottom: -20px;
-            font-size: 180px;
-            opacity: 0.15;
-            transform: rotate(-15deg);
-        }
-        .intro-banner h2 { font-size: 32px; margin-bottom: 15px; font-weight: 800; }
-        .intro-banner p { font-size: 17px; opacity: 0.95; max-width: 700px; line-height: 1.7; }
-        
-        .about-section {
-            margin-top: 60px;
-            padding: 40px;
-            background: var(--glass-bg);
-            border-radius: 35px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-        }
-        .about-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-        .about-card {
-            background: rgba(255,255,255,0.5);
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            transition: 0.3s;
-        }
-        .about-card:hover { transform: translateY(-5px); background: white; }
-        .about-card i { font-size: 24px; color: var(--primary); margin-bottom: 15px; }
-        .about-card h4 { margin-bottom: 10px; color: var(--text-main); }
-        .about-card p { font-size: 14px; color: var(--text-light); line-height: 1.5; }
-
-        .btn-back-aesthetic {
-            background: white;
-            border: 1px solid var(--glass-border);
-            padding: 8px 15px;
-            border-radius: 12px;
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        .btn-back-aesthetic:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateX(-3px);
-        }
-        .logout-full-btn {
-            background: #e03131;
-            color: white !important;
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            font-weight: 700;
-            display: block;
-            margin-top: 10px;
-            transition: 0.3s;
-        }
-        .logout-full-btn:hover {
-            background: #c92a2a;
-            transform: scale(1.02);
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="dashboard-body">
     <div class="dashboard-wrapper">
         <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-brand">
-                <i class="fa-solid fa-house-medical"></i>
-                <div class="brand-logotype">
-                    <span class="med">Med</span><span class="care">Care</span><span class="pro-badge">Pro</span>
-                </div>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="{{ url_for('dashboard') }}" class="nav-item active"><i class="fa-solid fa-chart-pie"></i> Overview</a>
-                <a href="{{ url_for('medicine') }}" class="nav-item"><i class="fa-solid fa-capsules"></i> Inventory</a>
-                <a href="{{ url_for('purchase') }}" class="nav-item"><i class="fa-solid fa-cart-plus"></i> Purchases {% if low_stock_count > 0 %}<span class="sidebar-badge" style="background: #e03131;">{{ low_stock_count }}</span>{% endif %}</a>
-                <a href="{{ url_for('expiry') }}" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> Expiry List {% if alert_count > 0 %}<span class="sidebar-badge">{{ alert_count }}</span>{% endif %}</a>
-                <a href="{{ url_for('billing') }}" class="nav-item"><i class="fa-solid fa-receipt"></i> Billing</a>
-                <a href="{{ url_for('supplier') }}" class="nav-item"><i class="fa-solid fa-truck-fast"></i> Suppliers</a>
-                <a href="{{ url_for('reports') }}" class="nav-item"><i class="fa-solid fa-chart-line"></i> Reports</a>
-                <a href="{{ url_for('settings') }}" class="nav-item"><i class="fa-solid fa-sliders"></i> Settings</a>
-                <a href="{{ url_for('contact') }}" class="nav-item"><i class="fa-solid fa-envelope"></i> Contact Us</a>
-            </nav>
-            <div class="sidebar-footer">
-                <a href="{{ url_for('logout') }}" class="logout-full-btn" onclick="return confirm('Are you sure you want to logout?')"><i class="fa-solid fa-power-off"></i> Logout</a>
-            </div>
-        </aside>
+        {% set active_page = 'dashboard' %}
+        {% include '_sidebar.html' %}
 
         <!-- MAIN CONTENT -->
         <main class="main-content" id="main-content">
@@ -131,127 +25,52 @@
                     <button class="sidebar-toggle" id="toggle-sidebar">
                         <i class="fa-solid fa-bars-staggered"></i>
                     </button>
-                    <a href="{{ url_for('logout') }}" class="btn-back-aesthetic" style="color: #e03131;"><i class="fa-solid fa-power-off"></i> Logout</a>
                 </div>
                 <div class="welcome-text">
                     <h1>Welcome Back, <span>{{ username }}</span></h1>
-                    <p>Pharmacy Management System Operational</p>
                 </div>
                 <div class="top-actions">
-                    <div class="search-pill">
-                        <i class="fa-solid fa-search"></i>
-                        <input type="text" id="dashboard-search" placeholder="Search modules...">
-                    </div>
                     <div class="profile-circle" onclick="window.location.href='{{ url_for('settings') }}'">
                         <img src="{{ url_for('static', filename='uploads/profile_pics/' + current_user.PROFILE_PIC) if current_user and current_user.PROFILE_PIC else 'https://ui-avatars.com/api/?name=' + username }}" alt="User">
                     </div>
                 </div>
             </header>
 
-            <!-- INTRO BANNER -->
-            <section class="intro-banner">
-                <h2>Experience Modern Pharmacy Management</h2>
-                <p>MedCare Pro streamlines your daily pharmaceutical operations with precision. From real-time inventory tracking to automated financial analytics, empower your business with data-driven decision making and enhanced patient safety.</p>
-            </section>
-
             <!-- PRIORITY NOTIFICATIONS (Top Stats Section) -->
-            <section class="stats-overview" style="grid-template-columns: repeat(2, 1fr);">
+            <section class="stats-overview">
                 <div class="glass-stat-card red" onclick="window.location.href='{{ url_for('expiry') }}'" style="cursor:pointer">
                     <div class="stat-icon"><i class="fa-solid fa-bell"></i></div>
                     <div class="stat-details">
                         <h3>{{ alert_count }} Expiry Alerts</h3>
-                        <h2>Urgent Monitor</h2>
+                        <h2>Expiring soon or expired</h2>
                     </div>
                 </div>
-                <div class="glass-stat-card amber" onclick="window.location.href='{{ url_for('purchase') }}'" style="cursor:pointer; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3);">
-                    <div class="stat-icon" style="color: #f59e0b;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="glass-stat-card amber" onclick="window.location.href='{{ url_for('purchase') }}'" style="cursor:pointer">
+                    <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
                     <div class="stat-details">
-                        <h3 style="color: #d97706;">{{ low_stock_count }} Stock Alerts</h3>
-                        <h2 style="color: #1a1d1e;">Low Inventory</h2>
+                        <h3>{{ low_stock_count }} Stock Alerts</h3>
+                        <h2>Low stock</h2>
                         {% if low_stock_items %}
-                        <ul style="list-style: none; padding: 0; margin-top: 10px; font-size: 14px; text-align: left;">
+                        <ul class="low-list">
                             {% for item in low_stock_items[:3] %}
-                            <li style="color: #b45309; margin-bottom: 5px;">
-                                <i class="fa-solid fa-circle-info"></i> {{ item.MEDICINE_NAME }} ({{ item.total_stock }} left)
+                            <li>{{ item.MEDICINE_NAME }} ({{ item.total_stock }} left)
                             </li>
                             {% endfor %}
                             {% if low_stock_items|length > 3 %}
-                            <li style="color: #b45309; font-style: italic;">+ {{ low_stock_items|length - 3 }} more...</li>
+                            <li>+ {{ low_stock_items|length - 3 }} more...</li>
                             {% endif %}
                         </ul>
                         {% endif %}
                     </div>
                 </div>
             </section>
-
-            <!-- MODULE GRID (Restored) -->
-            <h3 class="section-title">Operational Modules</h3>
-            <section class="module-grid" id="module-grid">
-                <div class="aesthetic-card" onclick="window.location.href='{{ url_for('medicine') }}'">
-                    <div class="card-icon inventory"><i class="fa-solid fa-boxes-stacked"></i></div>
-                    <h4>Inventory</h4>
-                    <p>Track medications and stock levels.</p>
-                </div>
-                <div class="aesthetic-card" onclick="window.location.href='{{ url_for('purchase') }}'">
-                    <div class="card-icon inventory" style="background: #e03131;"><i class="fa-solid fa-cart-plus"></i></div>
-                    <h4>Purchases</h4>
-                    <p>Log incoming stock and costs.</p>
-                </div>
-                <div class="aesthetic-card" onclick="window.location.href='{{ url_for('expiry') }}'">
-                    <div class="card-icon expiry"><i class="fa-solid fa-hourglass-end"></i></div>
-                    <h4>Expiry Alerts</h4>
-                    <p>Safety first shelf-life monitoring.</p>
-                </div>
-                <div class="aesthetic-card" onclick="window.location.href='{{ url_for('billing') }}'">
-                    <div class="card-icon billing"><i class="fa-solid fa-file-invoice"></i></div>
-                    <h4>Sales & Billing</h4>
-                    <p>Modern point-of-sale interface.</p>
-                </div>
-                <div class="aesthetic-card" onclick="window.location.href='{{ url_for('supplier') }}'">
-                    <div class="card-icon reports"><i class="fa-solid fa-truck-fast"></i></div>
-                    <h4>Suppliers</h4>
-                    <p>Manage your supply chain network.</p>
-                </div>
-                <div class="aesthetic-card" onclick="window.location.href='{{ url_for('reports') }}'">
-                    <div class="card-icon reports" style="background: #4c6ef5;"><i class="fa-solid fa-chart-line"></i></div>
-                    <h4>Reports</h4>
-                    <p>Analytics and financial insights.</p>
-                </div>
-                <div class="aesthetic-card" onclick="window.location.href='{{ url_for('settings') }}'">
-                    <div class="card-icon" style="background: #636e72;"><i class="fa-solid fa-sliders"></i></div>
-                    <h4>Settings</h4>
-                    <p>Profile and system preferences.</p>
-                </div>
-                <div class="aesthetic-card" onclick="window.location.href='{{ url_for('contact') }}'">
-                    <div class="card-icon" style="background: var(--primary);"><i class="fa-solid fa-envelope"></i></div>
-                    <h4>Contact Us</h4>
-                    <p>Get professional support.</p>
-                </div>
-            </section>
-
-            <!-- ABOUT SECTION -->
-            <section class="about-section">
-                <div style="text-align: center; margin-bottom: 40px;">
-                    <h2 style="color: var(--primary-dark); font-size: 32px;">About MedCare Pro</h2>
-                    <p style="color: var(--text-light); max-width: 600px; margin: 10px auto;">A professional suite designed for the modern pharmaceutical landscape.</p>
-                </div>
-                <div class="about-grid">
-                    <div class="about-card">
-                        <i class="fa-solid fa-bullseye"></i>
-                        <h4>Our Mission</h4>
-                        <p>To provide pharmacists with intuitive, high-performance tools that minimize manual overhead and maximize patient safety through digital innovation.</p>
-                    </div>
-                    <div class="about-card">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        <h4>Data Security</h4>
-                        <p>Your business data is protected with industry-standard encryption and secure session management, ensuring confidentiality at every step.</p>
-                    </div>
-                    <div class="about-card">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <h4>Growth Focused</h4>
-                        <p>Our analytics engine helps you identify top-performing medications and optimize your procurement strategies for better profitability.</p>
-                    </div>
-                </div>
+            <h3 class="section-title">Quick actions</h3>
+            <section class="quick-actions">
+                <a href="{{ url_for('billing') }}">New sale</a>
+                <a href="{{ url_for('purchase') }}">Add stock</a>
+                <a href="{{ url_for('medicine') }}">Inventory</a>
+                <a href="{{ url_for('expiry') }}">Expiry list</a>
+                <a href="{{ url_for('reports') }}">Reports</a>
             </section>
         </main>
     </div>
@@ -266,22 +85,6 @@
             mainContent.classList.toggle('expanded');
         });
 
-        // Dashboard Search Logic
-        const dashboardSearch = document.getElementById('dashboard-search');
-        const cards = document.querySelectorAll('.aesthetic-card');
-
-        dashboardSearch.addEventListener('keyup', function() {
-            const filter = this.value.toLowerCase();
-            cards.forEach(card => {
-                const title = card.querySelector('h4').textContent.toLowerCase();
-                const text = card.querySelector('p').textContent.toLowerCase();
-                if (title.includes(filter) || text.includes(filter)) {
-                    card.style.display = "";
-                } else {
-                    card.style.display = "none";
-                }
-            });
-        });
     </script>
 </body>
 </html>

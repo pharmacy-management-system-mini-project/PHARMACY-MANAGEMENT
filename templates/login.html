@@ -43,14 +43,9 @@
                     <button type="button" class="pw-toggle" id="pw-toggle" aria-controls="password" aria-pressed="false">Show</button>
                 </div>
 
-                <div class="row">
-                    <label class="check"><input type="checkbox" id="remember"> Keep me signed in here</label>
-                    <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
-                </div>
-
                 <button type="submit" class="submit">Sign in</button>
 
-                <p class="alt">New staff? <a href="{{ url_for('register') }}">Create an account</a> &middot; <a href="{{ url_for('index') }}">Home</a></p>
+                <p class="alt">No account? Ask the pharmacy owner to add you. &middot; <a href="{{ url_for('index') }}">Home</a></p>
                 <span class="stamp" aria-hidden="true">Staff<br>only</span>
             </form>
         </section>

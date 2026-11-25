@@ -1,0 +1,19 @@
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-logotype"><span class="med">Med</span><span class="care">Care</span></div>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="{{ url_for('dashboard') }}" class="nav-item{% if active_page == 'dashboard' %} active{% endif %}"><i class="fa-solid fa-table-columns"></i> Overview</a>
+        <a href="{{ url_for('medicine') }}" class="nav-item{% if active_page == 'medicine' %} active{% endif %}"><i class="fa-solid fa-pills"></i> Inventory</a>
+        <a href="{{ url_for('purchase') }}" class="nav-item{% if active_page == 'purchase' %} active{% endif %}"><i class="fa-solid fa-cart-plus"></i> Purchases {% if low_stock_count > 0 %}<span class="sidebar-badge">{{ low_stock_count }}</span>{% endif %}</a>
+        <a href="{{ url_for('expiry') }}" class="nav-item{% if active_page == 'expiry' %} active{% endif %}"><i class="fa-solid fa-hourglass-half"></i> Expiry list {% if alert_count > 0 %}<span class="sidebar-badge">{{ alert_count }}</span>{% endif %}</a>
+        <a href="{{ url_for('billing') }}" class="nav-item{% if active_page == 'billing' %} active{% endif %}"><i class="fa-solid fa-file-invoice"></i> Billing</a>
+        <a href="{{ url_for('supplier') }}" class="nav-item{% if active_page == 'supplier' %} active{% endif %}"><i class="fa-solid fa-truck"></i> Suppliers</a>
+        <a href="{{ url_for('reports') }}" class="nav-item{% if active_page == 'reports' %} active{% endif %}"><i class="fa-solid fa-chart-line"></i> Reports</a>
+        <a href="{{ url_for('settings') }}" class="nav-item{% if active_page == 'settings' %} active{% endif %}"><i class="fa-solid fa-gear"></i> Settings</a>
+        <a href="{{ url_for('contact') }}" class="nav-item{% if active_page == 'contact' %} active{% endif %}"><i class="fa-solid fa-envelope"></i> Contact</a>
+    </nav>
+    <div class="sidebar-footer">
+        <a href="{{ url_for('logout') }}" class="logout-full-btn" onclick="return confirm('Log out?')">Log out</a>
+    </div>
+</aside>

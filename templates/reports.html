@@ -107,28 +107,14 @@
             transform: translateX(-3px);
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="dashboard-body">
     <div class="dashboard-wrapper">
         <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-brand">
-                <i class="fa-solid fa-house-medical"></i>
-                <div class="brand-logotype">
-                    <span class="med">Med</span><span class="care">Care</span><span class="pro-badge">Pro</span>
-                </div>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Overview</a>
-                <a href="{{ url_for('medicine') }}" class="nav-item"><i class="fa-solid fa-capsules"></i> Inventory</a>
-                <a href="{{ url_for('purchase') }}" class="nav-item"><i class="fa-solid fa-cart-plus"></i> Purchases {% if low_stock_count > 0 %}<span class="sidebar-badge" style="background: #e03131;">{{ low_stock_count }}</span>{% endif %}</a>
-                <a href="{{ url_for('expiry') }}" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> Expiry Alerts {% if alert_count > 0 %}<span class="sidebar-badge">{{ alert_count }}</span>{% endif %}</a>
-                <a href="{{ url_for('billing') }}" class="nav-item"><i class="fa-solid fa-receipt"></i> Billing</a>
-                <a href="{{ url_for('supplier') }}" class="nav-item"><i class="fa-solid fa-truck-fast"></i> Suppliers</a>
-                <a href="{{ url_for('reports') }}" class="nav-item active"><i class="fa-solid fa-chart-line"></i> Reports</a>
-                <a href="{{ url_for('contact') }}" class="nav-item"><i class="fa-solid fa-envelope"></i> Contact Us</a>
-            </nav>
-        </aside>
+        {% set active_page = 'reports' %}
+        {% include '_sidebar.html' %}
 
         <main class="main-content" id="main-content">
             <header class="top-bar">
@@ -136,7 +122,6 @@
                     <button class="sidebar-toggle" id="toggle-sidebar">
                         <i class="fa-solid fa-bars-staggered"></i>
                     </button>
-                    <a href="{{ url_for('dashboard') }}" class="btn-back-aesthetic"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
                 </div>
                 <div class="header-title" style="margin-left: 20px;">
                     <h1>Sales & Analytics <span>Reports</span></h1>
@@ -146,17 +131,17 @@
 
             <section class="summary-stats">
                 <div class="summary-item">
-                    <i class="fa-solid fa-money-bill-trend-up" style="color: #40c057;"></i>
+                    <i class="fa-solid fa-money-bill-trend-up"></i>
                     <h4>Total Revenue</h4>
                     <p>₹{{ "%.2f"|format(summary.total_sales or 0) }}</p>
                 </div>
                 <div class="summary-item">
-                    <i class="fa-solid fa-sack-dollar" style="color: #fab005;"></i>
+                    <i class="fa-solid fa-sack-dollar"></i>
                     <h4>Total Profit</h4>
                     <p>₹{{ "%.2f"|format(summary.total_profit or 0) }}</p>
                 </div>
                 <div class="summary-item">
-                    <i class="fa-solid fa-chart-column" style="color: var(--primary);"></i>
+                    <i class="fa-solid fa-chart-column"></i>
                     <h4>Daily Avg</h4>
                     {% set avg = (summary.total_sales or 0) / (daily_sales|length if daily_sales|length > 0 else 1) %}
                     <p>₹{{ "%.2f"|format(avg) }}</p>
@@ -216,16 +201,16 @@
                 {
                     label: 'Revenue',
                     data: [{% for day in daily_sales %}{{ day.sales }},{% endfor %}],
-                    borderColor: '#4c6ef5',
-                    backgroundColor: 'rgba(76, 110, 245, 0.1)',
+                    borderColor: '#26211e',
+                    backgroundColor: 'rgba(38, 33, 30, 0.06)',
                     fill: true,
                     tension: 0.4
                 },
                 {
                     label: 'Profit',
                     data: [{% for day in daily_sales %}{{ day.profit }},{% endfor %}],
-                    borderColor: '#40c057',
-                    backgroundColor: 'rgba(64, 192, 87, 0.1)',
+                    borderColor: '#b5533c',
+                    backgroundColor: 'rgba(181, 83, 60, 0.08)',
                     fill: true,
                     tension: 0.4
                 }

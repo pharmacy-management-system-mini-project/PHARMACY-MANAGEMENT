@@ -3,51 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedCare Pro - Modern Pharmacy Management</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>MedCare - Pharmacy Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
-<body class="modern-saas-landing">
-    <!-- Background Wrapper -->
-    <div class="bg-wrapper">
-        <div class="bg-image"></div>
-    </div>
-
-    <!-- Glassmorphism Navbar -->
-    <nav class="glass-navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="dot"></span>
-                <div class="brand-logotype">
-                    <span class="med">Med</span><span class="care">Care</span><span class="pro-badge">Pro</span>
-                </div>
-            </div>
-            <!-- Navigation menu removed as per request -->
-            <div class="nav-auth">
-                <a href="{{ url_for('login') }}" class="pill-btn login-pill">Login</a>
-                <a href="{{ url_for('register') }}" class="pill-btn register-pill">Register</a>
-            </div>
-        </div>
-    </nav>
-
-    <main class="main-hero">
-        <!-- Left Frosted Glass Panel -->
-        <div class="frosted-panel">
-            <div class="hero-content">
-                <!-- Smart Pharmacy Management headline moved downwards via margin-top -->
-                <h1 class="bold-headline">SMART<br>PHARMACY<br>MANAGEMENT</h1>
-                <p class="hero-subtext">
-                    Experience the future of healthcare operations with our 
-                    minimalist, intuitive pharmacy management platform.
-                </p>
-                <!-- CTA group and extra indicators removed as per request -->
-            </div>
-        </div>
-
-        <div class="hero-visual">
-            <!-- Background bg2.png visibility -->
-        </div>
+<body>
+    <header class="bar">
+        <span class="mark">MedCare</span>
+        <a class="btn ghost" href="{{ url_for('login') }}">Sign in</a>
+    </header>
+    <main class="hero">
+        <p class="mono kicker">Pharmacy management</p>
+        <h1>Stock, sales and expiry dates in one place.</h1>
+        <p class="lead">Keep track of medicines and suppliers, bill customers, and see what is running low or about to expire.</p>
+        <a class="btn" href="{{ url_for('login') }}">Sign in</a>
     </main>
 </body>
 </html>
