@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in - MedCare Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login_page.css') }}">
+</head>
+<body>
+    <main class="split">
+        <section class="side">
+            <a href="{{ url_for('index') }}" class="wordmark">MedCare Pro</a>
+            <div class="side-copy">
+                <h2>Know what is on the shelf before the customer asks.</h2>
+                <p>Stock, billing and expiry dates in one place.</p>
+            </div>
+            <svg class="shelves" viewBox="0 0 450 400" aria-hidden="true"><g class="b" style="animation-delay:0.15s"><rect x="18.8" y="53" width="22.400000000000002" height="10" rx="2" fill="#2b2420"/><rect x="10" y="62" width="40" height="58" rx="5" fill="#e8dfcf"/><rect x="15" y="82.3" width="30" height="22.04" rx="2" fill="#faf6ee"/><rect x="19" y="90.3" width="22" height="3" fill="#2b2420" opacity=".55"/><rect x="19" y="97.3" width="14" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.21s"><rect x="65.44" y="17" width="29.120000000000005" height="10" rx="2" fill="#2b2420"/><rect x="54" y="26" width="52" height="94" rx="5" fill="#6f9a88"/><rect x="59" y="58.9" width="42" height="35.72" rx="2" fill="#faf6ee"/><rect x="63" y="66.9" width="34" height="3" fill="#2b2420" opacity=".55"/><rect x="63" y="73.9" width="26" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.27s"><rect x="126.44" y="41" width="29.120000000000005" height="10" rx="2" fill="#2b2420"/><rect x="115" y="50" width="52" height="70" rx="5" fill="#d9a441"/><rect x="120" y="74.5" width="42" height="26.6" rx="2" fill="#faf6ee"/><rect x="124" y="82.5" width="34" height="3" fill="#2b2420" opacity=".55"/><rect x="124" y="89.5" width="26" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.33s"><rect x="180.48" y="17" width="19.040000000000003" height="10" rx="2" fill="#2b2420"/><rect x="173" y="26" width="34" height="94" rx="5" fill="#6f9a88"/><rect x="178" y="58.9" width="24" height="35.72" rx="2" fill="#faf6ee"/><rect x="182" y="66.9" width="16" height="3" fill="#2b2420" opacity=".55"/><rect x="182" y="73.9" width="8" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.39s"><rect x="223.48" y="17" width="19.040000000000003" height="10" rx="2" fill="#2b2420"/><rect x="216" y="26" width="34" height="94" rx="5" fill="#e8dfcf"/><rect x="221" y="58.9" width="24" height="35.72" rx="2" fill="#faf6ee"/><rect x="225" y="66.9" width="16" height="3" fill="#2b2420" opacity=".55"/><rect x="225" y="73.9" width="8" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.45s"><rect x="267.8" y="53" width="22.400000000000002" height="10" rx="2" fill="#2b2420"/><rect x="259" y="62" width="40" height="58" rx="5" fill="#e8dfcf"/><rect x="264" y="82.3" width="30" height="22.04" rx="2" fill="#faf6ee"/><rect x="268" y="90.3" width="22" height="3" fill="#2b2420" opacity=".55"/><rect x="268" y="97.3" width="14" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.51s"><rect x="310.48" y="53" width="19.040000000000003" height="10" rx="2" fill="#2b2420"/><rect x="303" y="62" width="34" height="58" rx="5" fill="#efe6d6"/><rect x="308" y="82.3" width="24" height="22.04" rx="2" fill="#faf6ee"/><rect x="312" y="90.3" width="16" height="3" fill="#2b2420" opacity=".55"/><rect x="312" y="97.3" width="8" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.57s"><rect x="353.48" y="17" width="19.040000000000003" height="10" rx="2" fill="#2b2420"/><rect x="346" y="26" width="34" height="94" rx="5" fill="#efe6d6"/><rect x="351" y="58.9" width="24" height="35.72" rx="2" fill="#faf6ee"/><rect x="355" y="66.9" width="16" height="3" fill="#2b2420" opacity=".55"/><rect x="355" y="73.9" width="8" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.63s"><rect x="395.44" y="53" width="29.120000000000005" height="10" rx="2" fill="#2b2420"/><rect x="384" y="62" width="52" height="58" rx="5" fill="#c9835f"/><rect x="389" y="82.3" width="42" height="22.04" rx="2" fill="#faf6ee"/><rect x="393" y="90.3" width="34" height="3" fill="#2b2420" opacity=".55"/><rect x="393" y="97.3" width="26" height="3" fill="#2b2420" opacity=".3"/></g><rect x="0" y="120" width="450" height="8" fill="#0f2420"/><g class="b" style="animation-delay:0.3s"><rect x="17.48" y="183" width="19.040000000000003" height="10" rx="2" fill="#2b2420"/><rect x="10" y="192" width="34" height="58" rx="5" fill="#d9a441"/><rect x="15" y="212.3" width="24" height="22.04" rx="2" fill="#faf6ee"/><rect x="19" y="220.3" width="16" height="3" fill="#2b2420" opacity=".55"/><rect x="19" y="227.3" width="8" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.36s"><rect x="58.8" y="159" width="22.400000000000002" height="10" rx="2" fill="#2b2420"/><rect x="50" y="168" width="40" height="82" rx="5" fill="#e8dfcf"/><rect x="55" y="196.7" width="30" height="31.16" rx="2" fill="#faf6ee"/><rect x="59" y="204.7" width="22" height="3" fill="#2b2420" opacity=".55"/><rect x="59" y="211.7" width="14" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.42s"><rect x="107.8" y="183" width="22.400000000000002" height="10" rx="2" fill="#2b2420"/><rect x="99" y="192" width="40" height="58" rx="5" fill="#c9835f"/><rect x="104" y="212.3" width="30" height="22.04" rx="2" fill="#faf6ee"/><rect x="108" y="220.3" width="22" height="3" fill="#2b2420" opacity=".55"/><rect x="108" y="227.3" width="14" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.48s"><rect x="156.8" y="147" width="22.400000000000002" height="10" rx="2" fill="#2b2420"/><rect x="148" y="156" width="40" height="94" rx="5" fill="#efe6d6"/><rect x="153" y="188.9" width="30" height="35.72" rx="2" fill="#faf6ee"/><rect x="157" y="196.9" width="22" height="3" fill="#2b2420" opacity=".55"/><rect x="157" y="203.9" width="14" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.54s"><rect x="204.12" y="147" width="25.76" height="10" rx="2" fill="#2b2420"/><rect x="194" y="156" width="46" height="94" rx="5" fill="#c9835f"/><rect x="199" y="188.9" width="36" height="35.72" rx="2" fill="#faf6ee"/><rect x="203" y="196.9" width="28" height="3" fill="#2b2420" opacity=".55"/><rect x="203" y="203.9" width="20" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.6s"><rect x="253.48" y="183" width="19.040000000000003" height="10" rx="2" fill="#2b2420"/><rect x="246" y="192" width="34" height="58" rx="5" fill="#e8dfcf"/><rect x="251" y="212.3" width="24" height="22.04" rx="2" fill="#faf6ee"/><rect x="255" y="220.3" width="16" height="3" fill="#2b2420" opacity=".55"/><rect x="255" y="227.3" width="8" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.66s"><rect x="296.12" y="147" width="25.76" height="10" rx="2" fill="#2b2420"/><rect x="286" y="156" width="46" height="94" rx="5" fill="#6f9a88"/><rect x="291" y="188.9" width="36" height="35.72" rx="2" fill="#faf6ee"/><rect x="295" y="196.9" width="28" height="3" fill="#2b2420" opacity=".55"/><rect x="295" y="203.9" width="20" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.72s"><rect x="349.8" y="171" width="22.400000000000002" height="10" rx="2" fill="#2b2420"/><rect x="341" y="180" width="40" height="70" rx="5" fill="#b5533c"/><rect x="346" y="204.5" width="30" height="26.6" rx="2" fill="#faf6ee"/><rect x="350" y="212.5" width="22" height="3" fill="#2b2420" opacity=".55"/><rect x="350" y="219.5" width="14" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.78s"><rect x="392.48" y="171" width="19.040000000000003" height="10" rx="2" fill="#2b2420"/><rect x="385" y="180" width="34" height="70" rx="5" fill="#e8dfcf"/><rect x="390" y="204.5" width="24" height="26.6" rx="2" fill="#faf6ee"/><rect x="394" y="212.5" width="16" height="3" fill="#2b2420" opacity=".55"/><rect x="394" y="219.5" width="8" height="3" fill="#2b2420" opacity=".3"/></g><rect x="0" y="250" width="450" height="8" fill="#0f2420"/><g class="b" style="animation-delay:0.45s"><rect x="18.8" y="301" width="22.400000000000002" height="10" rx="2" fill="#2b2420"/><rect x="10" y="310" width="40" height="70" rx="5" fill="#e8dfcf"/><rect x="15" y="334.5" width="30" height="26.6" rx="2" fill="#faf6ee"/><rect x="19" y="342.5" width="22" height="3" fill="#2b2420" opacity=".55"/><rect x="19" y="349.5" width="14" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.51s"><rect x="70.44" y="313" width="29.120000000000005" height="10" rx="2" fill="#2b2420"/><rect x="59" y="322" width="52" height="58" rx="5" fill="#c9835f"/><rect x="64" y="342.3" width="42" height="22.04" rx="2" fill="#faf6ee"/><rect x="68" y="350.3" width="34" height="3" fill="#2b2420" opacity=".55"/><rect x="68" y="357.3" width="26" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.57s"><rect x="126.44" y="289" width="29.120000000000005" height="10" rx="2" fill="#2b2420"/><rect x="115" y="298" width="52" height="82" rx="5" fill="#c9835f"/><rect x="120" y="326.7" width="42" height="31.16" rx="2" fill="#faf6ee"/><rect x="124" y="334.7" width="34" height="3" fill="#2b2420" opacity=".55"/><rect x="124" y="341.7" width="26" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.63s"><rect x="179.8" y="277" width="22.400000000000002" height="10" rx="2" fill="#2b2420"/><rect x="171" y="286" width="40" height="94" rx="5" fill="#c9835f"/><rect x="176" y="318.9" width="30" height="35.72" rx="2" fill="#faf6ee"/><rect x="180" y="326.9" width="22" height="3" fill="#2b2420" opacity=".55"/><rect x="180" y="333.9" width="14" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.69s"><rect x="231.44" y="277" width="29.120000000000005" height="10" rx="2" fill="#2b2420"/><rect x="220" y="286" width="52" height="94" rx="5" fill="#efe6d6"/><rect x="225" y="318.9" width="42" height="35.72" rx="2" fill="#faf6ee"/><rect x="229" y="326.9" width="34" height="3" fill="#2b2420" opacity=".55"/><rect x="229" y="333.9" width="26" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.75s"><rect x="284.8" y="301" width="22.400000000000002" height="10" rx="2" fill="#2b2420"/><rect x="276" y="310" width="40" height="70" rx="5" fill="#c9835f"/><rect x="281" y="334.5" width="30" height="26.6" rx="2" fill="#faf6ee"/><rect x="285" y="342.5" width="22" height="3" fill="#2b2420" opacity=".55"/><rect x="285" y="349.5" width="14" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.81s"><rect x="329.48" y="313" width="19.040000000000003" height="10" rx="2" fill="#2b2420"/><rect x="322" y="322" width="34" height="58" rx="5" fill="#b5533c"/><rect x="327" y="342.3" width="24" height="22.04" rx="2" fill="#faf6ee"/><rect x="331" y="350.3" width="16" height="3" fill="#2b2420" opacity=".55"/><rect x="331" y="357.3" width="8" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.87s"><rect x="372.48" y="289" width="19.040000000000003" height="10" rx="2" fill="#2b2420"/><rect x="365" y="298" width="34" height="82" rx="5" fill="#d9a441"/><rect x="370" y="326.7" width="24" height="31.16" rx="2" fill="#faf6ee"/><rect x="374" y="334.7" width="16" height="3" fill="#2b2420" opacity=".55"/><rect x="374" y="341.7" width="8" height="3" fill="#2b2420" opacity=".3"/></g><g class="b" style="animation-delay:0.93s"><rect x="416.44" y="277" width="29.120000000000005" height="10" rx="2" fill="#2b2420"/><rect x="405" y="286" width="52" height="94" rx="5" fill="#efe6d6"/><rect x="410" y="318.9" width="42" height="35.72" rx="2" fill="#faf6ee"/><rect x="414" y="326.9" width="34" height="3" fill="#2b2420" opacity=".55"/><rect x="414" y="333.9" width="26" height="3" fill="#2b2420" opacity=".3"/></g><rect x="0" y="380" width="450" height="8" fill="#0f2420"/></svg>
+        </section>
+
+        <section class="form-side">
+            <form action="{{ url_for('login') }}" method="POST" class="label" novalidate>
+                <div class="label-top">
+                    <span class="rx">Rx</span>
+                    <span class="mono">STAFF SIGN-IN</span>
+                </div>
+                <h1>Sign in to the counter</h1>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% for category, message in messages %}
+                    <p class="notice {{ category }}" role="alert">{{ message }}</p>
+                  {% endfor %}
+                {% endwith %}
+
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus>
+
+                <label for="password">Password</label>
+                <div class="pw">
+                    <input type="password" name="password" id="password" autocomplete="current-password" required>
+                    <button type="button" class="pw-toggle" id="pw-toggle" aria-controls="password" aria-pressed="false">Show</button>
+                </div>
+
+                <div class="row">
+                    <label class="check"><input type="checkbox" id="remember"> Keep me signed in here</label>
+                    <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="submit">Sign in</button>
+
+                <p class="alt">New staff? <a href="{{ url_for('register') }}">Create an account</a> &middot; <a href="{{ url_for('index') }}">Home</a></p>
+                <span class="stamp" aria-hidden="true">Staff<br>only</span>
+            </form>
+        </section>
+    </main>
+    <script>
+        (function () {
+            var pw = document.getElementById('password');
+            var t = document.getElementById('pw-toggle');
+            t.addEventListener('click', function () {
+                var show = pw.type === 'password';
+                pw.type = show ? 'text' : 'password';
+                t.textContent = show ? 'Hide' : 'Show';
+                t.setAttribute('aria-pressed', show ? 'true' : 'false');
+            });
+            // Only complain after the user tries to submit, and say what is missing.
+            var form = document.querySelector('form');
+            form.addEventListener('submit', function (e) {
+                var u = document.getElementById('username');
+                var missing = !u.value.trim() ? u : (!pw.value ? pw : null);
+                if (missing) {
+                    e.preventDefault();
+                    var n = form.querySelector('.notice');
+                    if (!n) {
+                        n = document.createElement('p');
+                        n.setAttribute('role', 'alert');
+                        form.insertBefore(n, form.querySelector('label'));
+                    }
+                    n.className = 'notice error';
+                    n.textContent = missing === u ? 'Enter your username.' : 'Enter your password.';
+                    missing.focus();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
